@@ -1,0 +1,169 @@
+{
+  "name": "textops",
+  "displayName": "TextOPS",
+  "description": "专为开发者和运维工程师设计的强大文本处理扩展。支持智能排序、JSON/YAML格式化、数据对齐、K8s YAML清理等智能文本操作功能。",
+  "version": "1.0.0",
+  "publisher": "yangzw1024",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "text",
+    "format",
+    "sort",
+    "json",
+    "yaml",
+    "kubernetes",
+    "devops",
+    "alignment",
+    "duplicate",
+    "statistics"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yangzw1024/TextOPS.git"
+  },
+  "homepage": "https://github.com/yangzw1024/TextOPS/blob/main/README.md",
+  "author": {
+    "name": "yangzw1024",
+    "email": "yangzw1024@gmail.com"
+  },
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "textops.removeDuplicateLines",
+        "title": "Unique Lines"
+      },
+      {
+        "command": "textops.alignColumns",
+        "title": "Align Columns"
+      },
+      {
+        "command": "textops.sortByColumn",
+        "title": "Sort by Column"
+      },
+      {
+        "command": "textops.sortAsc",
+        "title": "Sort Asc"
+      },
+      {
+        "command": "textops.sortDesc",
+        "title": "Sort Desc"
+      },
+      {
+        "command": "textops.toJsonStringLines",
+        "title": "To JSON String Lines"
+      },
+      {
+        "command": "textops.formatJson",
+        "title": "Format JSON/YAML"
+      },
+      {
+        "command": "textops.trimLines",
+        "title": "Trim Lines"
+      },
+      {
+        "command": "textops.removeEmptyLines",
+        "title": "Remove Empty Lines"
+      },
+      {
+        "command": "textops.cleanK8sYaml",
+        "title": "Clean K8s YAML"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "textops.submenu",
+          "group": "textops"
+        }
+      ],
+      "textops.submenu": [
+        {
+          "command": "textops.removeDuplicateLines",
+          "group": "textops@1"
+        },
+        {
+          "command": "textops.alignColumns",
+          "group": "textops@2"
+        },
+        {
+          "submenu": "textops.sort.submenu",
+          "group": "textops@3"
+        },
+        {
+          "command": "textops.toJsonStringLines",
+          "group": "textops@4"
+        },
+        {
+          "command": "textops.formatJson",
+          "group": "textops@5"
+        },
+        {
+          "command": "textops.trimLines",
+          "group": "textops@6"
+        },
+        {
+          "command": "textops.removeEmptyLines",
+          "group": "textops@7"
+        },
+        {
+          "command": "textops.cleanK8sYaml",
+          "group": "textops@8"
+        }
+      ],
+      "textops.sort.submenu": [
+        {
+          "command": "textops.sortAsc",
+          "group": "sort@1"
+        },
+        {
+          "command": "textops.sortDesc",
+          "group": "sort@2"
+        },
+        {
+          "command": "textops.sortByColumn",
+          "group": "sort@3"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "textops.submenu",
+        "label": "TextOPS"
+      },
+      {
+        "id": "textops.sort.submenu",
+        "label": "Sort"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
