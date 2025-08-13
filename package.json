@@ -2,7 +2,7 @@
   "name": "textops",
   "displayName": "TextOPS",
   "description": "专为开发者和运维工程师设计的强大文本处理扩展。支持智能排序、JSON/YAML格式化、数据对齐、K8s YAML清理等智能文本操作功能。",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "yangzw1024",
   "engines": {
     "vscode": "^1.74.0"
@@ -161,9 +161,10 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "16.x",
     "@types/vscode": "^1.74.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "vsce": "^2.15.0"
   }
 }

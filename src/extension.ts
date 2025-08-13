@@ -458,22 +458,41 @@ async function cleanK8sYaml() {
     try {
         const { text, range } = getTextToProcess(editor);
         
-        // 解析 YAML
-        const docs = text.split('---\n').filter(doc => doc.trim());
-        const cleanedDocs = docs.map(doc => {
-            try {
-                const yamlObj = yaml.load(doc.trim());
-                const cleaned = cleanK8sObject(yamlObj);
-                return yaml.dump(cleaned, { indent: 2, lineWidth: -1 });
-            } catch {
-                return doc; // 如果解析失败，保持原文
-            }
-        });
+        // 使用更精确的正则表达式分割，保留所有空行
+        const parts = text.split(/(\n*\s*---\s*\n*)/);
+        const result: string[] = [];
         
-        const result = cleanedDocs.join('---\n');
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            
+            // 如果是分隔符及其周围的空行，直接保留
+            if (part.match(/\n*\s*---\s*\n*/)) {
+                result.push(part);
+            } else if (part.trim()) {
+                // 处理YAML内容，保留前后的空行
+                const leadingWhitespace = part.match(/^\s*/)?.[0] || '';
+                const trailingWhitespace = part.match(/\s*$/)?.[0] || '';
+                const content = part.trim();
+                
+                try {
+                    const yamlObj = yaml.load(content);
+                    if (yamlObj && typeof yamlObj === 'object') {
+                        const cleaned = cleanK8sObject(yamlObj);
+                        const cleanedYaml = yaml.dump(cleaned, { indent: 2, lineWidth: -1 }).trim();
+                        result.push(leadingWhitespace + cleanedYaml + trailingWhitespace);
+                    } else {
+                        result.push(part);
+                    }
+                } catch {
+                    result.push(part); // 如果解析失败，保持原文
+                }
+            } else {
+                result.push(part);
+            }
+        }
         
         await editor.edit(editBuilder => {
-            editBuilder.replace(range, result);
+            editBuilder.replace(range, result.join(''));
         });
     } catch (error) {
         vscode.window.showErrorMessage('清理K8s YAML操作失败');
