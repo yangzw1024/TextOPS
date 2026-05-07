@@ -1,179 +1,355 @@
 # TextOPS
 
-专为开发者和运维工程师设计的强大文本处理扩展。提供智能排序、JSON/YAML格式化、数据对齐、K8s YAML清理等10+种实用功能，让文本处理变得简单高效。
+**TextOPS** is a powerful text manipulation extension for VS Code, built for developers and DevOps engineers who deal with messy text every day — log outputs, config files, Kubernetes manifests, CSV data, and more.
 
-## 功能特性
+Stop copy-pasting into external tools. Everything you need is right in your editor, one right-click away.
 
-- **智能统计** - 选中数字自动计算求和、平均值、最值
-- **智能排序** - 自动识别数字/文本类型，支持按列排序
-- **列对齐** - 自动识别分隔符，完美对齐不规则文本
-- **JSON/YAML格式化** - 支持错误检测和高亮显示
-- **K8s专用** - 一键清理YAML运行时字段，保留核心配置
+---
 
-## 使用方法
+## Features at a Glance
 
-1. 选中文本或将光标定位到文件中
-2. 右键选择 **TextOPS** 菜单
-3. 选择相应的操作功能
+| Feature | Description |
+|---|---|
+| 📊 **Smart Statistics** | Instant sum, avg, max, min for selected numbers |
+| 🔤 **Sort Asc / Desc** | Auto-detects numeric vs text, sorts intelligently |
+| 🗂️ **Sort by Column** | Sort multi-column data by any column and separator |
+| 📐 **Align Columns** | Pad columns to equal width for clean, readable output |
+| 🧹 **Unique Lines** | Remove duplicate lines, preserve order |
+| 🔍 **Highlight Duplicates** | Visually mark duplicate lines without modifying text |
+| ✂️ **Trim Lines** | Strip leading and trailing whitespace from every line |
+| 🚫 **Remove Empty Lines** | Clean up blank lines in one click |
+| 🔁 **To JSON String Lines** | Convert plain lines to properly escaped JSON string array |
+| 🎨 **Format JSON / YAML** | Auto-detect and pretty-print, with inline error highlighting |
+| 🔄 **JSON ↔ YAML Convert** | Instantly convert between JSON and YAML formats |
+| 📋 **Table to Markdown** | Convert plain text tables to GitHub-flavoured Markdown |
+| ☸️ **Clean K8s YAML** | Strip runtime-only fields from Kubernetes manifests |
+| 🔐 **Generate Password** | Create secure random passwords with custom length |
 
-## 功能示例
+---
 
-### 智能统计
-选中数字时状态栏自动显示统计信息：
+## How to Use
+
+All features are accessible from the right-click context menu:
+
+1. Select the text you want to process (or leave nothing selected to process the entire file)
+2. Right-click → **TextOPS** → choose an operation
+
+---
+
+## Feature Details
+
+### 📊 Smart Statistics
+
+Select a block of numbers and the status bar instantly shows live statistics — no calculator needed.
+
 ```
 100
 200
 150
+75
 ```
-状态栏显示：`Selected 3 | Sum 450 | Max 200 | Min 100 | Avg 150.00`
 
-### 去除重复行
+Status bar: `Selected 4 | Sum 525 | Max 200 | Min 75 | Avg 131.25`
+
+---
+
+### 🔤 Sort Asc / Sort Desc
+
+Sorts lines by the first column. Automatically detects whether the data is numeric or text, so numbers sort as numbers — not lexicographically.
+
 ```
-# 输入
-apple
-banana
-apple
+# Input          # Sorted Asc (numeric)
+30               8
+10       →       10
+8                20
+20               30
+```
+
+```
+# Input          # Sorted Asc (text)
+Zebra            Banana
+apple    →       Zebra
+Banana           apple
+cat              cat
+```
+
+---
+
+### 🗂️ Sort by Column
+
+Need to sort a table by the 3rd column? Sort by Column lets you pick the column number, separator (space, comma, tab, etc.), and direction — all via a quick interactive prompt.
+
+```
+# Sort by column 2 (age), ascending
+John   25  NewYork          Bob    22  Tokyo
+Alice  30  London   →       John   25  NewYork
+Bob    22  Tokyo            Alice  30  London
+```
+
+---
+
+### 📐 Align Columns
+
+Automatically detects whitespace-separated columns and pads each to equal width. Great for making log output or tabular data readable at a glance.
+
+```
+# Input                  # Output
+name age city            name  age city
+John 25 NewYork    →     John  25  NewYork
+Alice 30 London          Alice 30  London
+Bob 22 Tokyo             Bob   22  Tokyo
+```
+
+---
+
+### 🧹 Unique Lines
+
+Removes duplicate lines while preserving the original order of first occurrences.
+
+```
+# Input          # Output
+apple            apple
+banana   →       banana
+apple            orange
 orange
 banana
+```
 
-# 输出
+---
+
+### 🔍 Highlight Duplicate Lines
+
+Highlights all lines that appear more than once with an orange background. Does **not** modify your text — perfect for reviewing data before cleaning. Use **Clear Highlights** to remove the markers.
+
+```
+# Before highlighting
 apple
 banana
+apple      ← will be highlighted
 orange
+banana     ← will be highlighted
 ```
 
-### 列对齐
-```
-# 输入
-name    age  city
-John  25    NewYork
-Alice   30 London
-Bob 22      Tokyo
+After running the command, duplicate lines are visually marked in the editor.
 
-# 输出
-name  age city   
-John  25  NewYork
-Alice 30  London 
-Bob   22  Tokyo  
-```
+---
 
-### 智能排序
-```
-# 数字排序（升序）
-30 → 8
-10 → 10
-8  → 20
-20 → 30
+### ✂️ Trim Lines
 
-# 文本排序（升序）
-Zebra  → Banana
-apple  → Zebra
-Banana → apple
-cat    → cat
+Strips leading and trailing whitespace from every line. Useful for cleaning up copy-pasted content from terminals, spreadsheets, or web pages.
+
+```
+# Input            # Output
+  hello world      hello world
+    foo bar    →   foo bar
+  baz              baz
 ```
 
-### 按列排序
+---
+
+### 🚫 Remove Empty Lines
+
+Removes all blank lines (including lines that contain only whitespace).
+
 ```
-# 按第2列（年龄）升序排序
-John 25 NewYork  → Bob 22 Tokyo
-Alice 30 London  → John 25 NewYork
-Bob 22 Tokyo     → Alice 30 London
+# Input      # Output
+line 1       line 1
+             line 2
+line 2   →   line 3
+             
+line 3
 ```
 
-### JSON/YAML格式化
-**正确格式** - 自动美化：
+---
+
+### 🔁 To JSON String Lines
+
+Converts each line into a properly escaped JSON string with a trailing comma — ready to paste into a JSON array. Handles backslashes, quotes, tabs, and newlines correctly.
+
+```
+# Input          # Output
+line 1           "line 1",
+line 2    →      "line 2",
+line 3           "line 3",
+```
+
+---
+
+### 🎨 Format JSON / YAML
+
+Auto-detects whether the selected text is JSON or YAML and pretty-prints it with consistent 2-space indentation.
+
+**Valid input** — formats cleanly:
 ```json
-{"name":"test","value":123}
-
-↓ 格式化后
-
+{"name":"test","version":"1.0","tags":["a","b"]}
+```
+```json
 {
   "name": "test",
-  "value": 123
+  "version": "1.0",
+  "tags": [
+    "a",
+    "b"
+  ]
 }
 ```
 
-**错误格式** - 高亮错误行：
-```json
-{"name":"test","value":123"missing":"comma"}
-```
-保持原文本不变，红色高亮错误行，显示错误提示
+**Invalid input** — keeps original text and highlights the error line in red, so you can fix it without losing your content.
 
-### 转JSON字符串数组
-```
-# 输入
-line 1
-line 2
-line 3
+---
 
-# 输出
-"line 1",
-"line 2",
-"line 3",
-```
+### 🔄 JSON ↔ YAML Convert
 
-### 清理空白
-```
-# 输入
-  hello  
-  world  
+Automatically detects whether your text is JSON or YAML and converts it to the other format. Perfect for migrating config files or working with different tools that prefer different formats.
 
-# 输出
-hello
-world
-```
-
-### 移除空行
-```
-# 输入
-line 1
-
-line 2
-
-
-line 3
-
-# 输出
-line 1
-line 2
-line 3
-```
-
-### K8s YAML清理
 ```yaml
-# 清理前
+# YAML input
+name: my-app
+version: 1.0
+tags:
+  - production
+  - web
+```
+
+```json
+# After conversion → JSON
+{
+  "name": "my-app",
+  "version": "1.0",
+  "tags": [
+    "production",
+    "web"
+  ]
+}
+```
+
+Works in both directions — JSON → YAML and YAML → JSON.
+
+---
+
+### 📋 Table to Markdown
+
+Converts plain text tables (whitespace-aligned or tab-separated) into GitHub-flavoured Markdown tables. The first row is treated as the header.
+
+```
+# Input (plain text table)
+Name      Age  City
+John      25   NewYork
+Alice     30   London
+Bob       22   Tokyo
+```
+
+```markdown
+# Output (Markdown table)
+| Name  | Age | City    |
+| ----- | --- | ------- |
+| John  | 25  | NewYork |
+| Alice | 30  | London  |
+| Bob   | 22  | Tokyo   |
+```
+
+Perfect for pasting into GitHub issues, pull requests, or documentation.
+
+---
+
+### ☸️ Clean K8s YAML
+
+When you `kubectl get` a resource and want to reuse the YAML as a template, it's full of runtime-only fields that will cause issues if you re-apply them. This command strips all of them automatically.
+
+Removed fields: `status`, `managedFields`, `uid`, `resourceVersion`, `generation`, `creationTimestamp`, `selfLink`, `finalizers`, `ownerReferences`
+
+Supports multi-document YAML files (separated by `---`).
+
+```yaml
+# Before
 apiVersion: v1
 kind: Pod
 metadata:
-  name: test-pod
-  uid: 12345
-  resourceVersion: "123"
+  name: my-app
+  uid: a1b2c3d4-...
+  resourceVersion: "98765"
+  creationTimestamp: "2024-01-01T00:00:00Z"
   managedFields: [...]
 status:
   phase: Running
-spec:
-  containers:
-  - name: app
-    image: nginx
-
-# 清理后
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-pod
+  podIP: 10.0.0.1
 spec:
   containers:
     - name: app
-      image: nginx
+      image: nginx:latest
 ```
 
-## 安装
+```yaml
+# After
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+spec:
+  containers:
+    - name: app
+      image: nginx:latest
+```
 
-1. 打开 VSCode
-2. 按 `Ctrl+Shift+X` 打开扩展面板
-3. 搜索 "TextOPS"
-4. 点击安装
+---
 
-## 许可证
+### 🔐 Generate Password
 
-MIT
+Generates a cryptographically random password with customizable length (8–128 characters, default 12). The password includes:
+
+- Uppercase letters (A-Z)
+- Lowercase letters (a-z)
+- Digits (0-9)
+- Safe special characters: `! ? _ , . - ~`
+
+These special characters don't require escaping in most shells, URLs, or config files.
+
+**Usage:**
+1. Place your cursor where you want the password
+2. Run **TextOPS → Generate Password**
+3. Enter the desired length (or press Enter for 12)
+4. The password is inserted at the cursor position
+
+If no editor is open, the password is copied to your clipboard instead.
+
+**Example output:**
+```
+aB3!xZ9_mK2.pQ7~
+```
+
+---
+
+## Installation
+
+**VS Code Marketplace:**
+1. Open VS Code
+2. Press `Ctrl+Shift+X` (or `Cmd+Shift+X` on macOS)
+3. Search for **TextOPS**
+4. Click Install
+
+**Open VSX Registry:**
+Search for **TextOPS** on [open-vsx.org](https://open-vsx.org) and install directly.
+
+---
+
+## Changelog
+
+### 1.1.0
+- ✨ Added **Highlight Duplicate Lines** — visually mark duplicates without modifying text
+- ✨ Added **JSON ↔ YAML Convert** — instant bidirectional conversion
+- ✨ Added **Table to Markdown** — convert plain text tables to Markdown format
+- ✨ Added **Generate Password** — create secure random passwords
+- 🎨 Reorganized context menu into logical groups
+- 📝 Improved command descriptions and error messages
+
+### 1.0.1
+- 🐛 Bug fixes and stability improvements
+
+### 1.0.0
+- 🎉 Initial release
+
+---
+
+## License
+
+[MIT](LICENSE) © yangzw1024

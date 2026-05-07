@@ -1,8 +1,8 @@
 {
   "name": "textops",
   "displayName": "TextOPS",
-  "description": "专为开发者和运维工程师设计的强大文本处理扩展。支持智能排序、JSON/YAML格式化、数据对齐、K8s YAML清理等智能文本操作功能。",
-  "version": "1.0.1",
+  "description": "A powerful text manipulation extension for developers and DevOps engineers. Sort, deduplicate, align, format JSON/YAML, convert, generate passwords, and more — all from the right-click menu.",
+  "version": "1.1.0",
   "publisher": "yangzw1024",
   "engines": {
     "vscode": "^1.74.0"
@@ -21,13 +21,19 @@
     "devops",
     "alignment",
     "duplicate",
-    "statistics"
+    "statistics",
+    "markdown",
+    "password",
+    "convert"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yangzw1024/TextOPS.git"
   },
   "homepage": "https://github.com/yangzw1024/TextOPS/blob/main/README.md",
+  "bugs": {
+    "url": "https://github.com/yangzw1024/TextOPS/issues"
+  },
   "author": {
     "name": "yangzw1024",
     "email": "yangzw1024@gmail.com"
@@ -47,6 +53,14 @@
       {
         "command": "textops.removeDuplicateLines",
         "title": "Unique Lines"
+      },
+      {
+        "command": "textops.highlightDuplicateLines",
+        "title": "Highlight Duplicate Lines"
+      },
+      {
+        "command": "textops.clearHighlights",
+        "title": "Clear Highlights"
       },
       {
         "command": "textops.alignColumns",
@@ -73,6 +87,10 @@
         "title": "Format JSON/YAML"
       },
       {
+        "command": "textops.convertJsonYaml",
+        "title": "Convert JSON ↔ YAML"
+      },
+      {
         "command": "textops.trimLines",
         "title": "Trim Lines"
       },
@@ -83,6 +101,14 @@
       {
         "command": "textops.cleanK8sYaml",
         "title": "Clean K8s YAML"
+      },
+      {
+        "command": "textops.tableToMarkdown",
+        "title": "Table to Markdown"
+      },
+      {
+        "command": "textops.generatePassword",
+        "title": "Generate Password"
       }
     ],
     "menus": {
@@ -95,35 +121,55 @@
       "textops.submenu": [
         {
           "command": "textops.removeDuplicateLines",
-          "group": "textops@1"
+          "group": "1_lines@1"
         },
         {
-          "command": "textops.alignColumns",
-          "group": "textops@2"
+          "command": "textops.highlightDuplicateLines",
+          "group": "1_lines@2"
         },
         {
-          "submenu": "textops.sort.submenu",
-          "group": "textops@3"
-        },
-        {
-          "command": "textops.toJsonStringLines",
-          "group": "textops@4"
-        },
-        {
-          "command": "textops.formatJson",
-          "group": "textops@5"
+          "command": "textops.clearHighlights",
+          "group": "1_lines@3"
         },
         {
           "command": "textops.trimLines",
-          "group": "textops@6"
+          "group": "1_lines@4"
         },
         {
           "command": "textops.removeEmptyLines",
-          "group": "textops@7"
+          "group": "1_lines@5"
+        },
+        {
+          "command": "textops.alignColumns",
+          "group": "2_format@1"
+        },
+        {
+          "submenu": "textops.sort.submenu",
+          "group": "2_format@2"
+        },
+        {
+          "command": "textops.toJsonStringLines",
+          "group": "3_convert@1"
+        },
+        {
+          "command": "textops.formatJson",
+          "group": "3_convert@2"
+        },
+        {
+          "command": "textops.convertJsonYaml",
+          "group": "3_convert@3"
+        },
+        {
+          "command": "textops.tableToMarkdown",
+          "group": "3_convert@4"
         },
         {
           "command": "textops.cleanK8sYaml",
-          "group": "textops@8"
+          "group": "4_devops@1"
+        },
+        {
+          "command": "textops.generatePassword",
+          "group": "5_generate@1"
         }
       ],
       "textops.sort.submenu": [
@@ -161,10 +207,10 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "16.x",
     "@types/vscode": "^1.74.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "@vscode/vsce": "^3.3.2"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0",
-    "vsce": "^2.15.0"
+    "js-yaml": "^4.1.0"
   }
 }
